@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS devthoughts;
 
 USE devthoughts;
 
+-- Tabla de Users
 CREATE TABLE IF NOT EXISTS users (
     id INT auto_increment PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
     register_date DATE NOT NULL
 )ENGINE=InnoDB;
 
+-- Tabla de Posts
 CREATE TABLE IF NOT EXISTS posts (
     id INT auto_increment PRIMARY KEY,
     user_id INT,
