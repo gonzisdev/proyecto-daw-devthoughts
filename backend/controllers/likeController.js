@@ -7,13 +7,9 @@ export class likeController{
         const like = new Like(req.body);
         // Asignamos el id del usuario que realiza la peticion
         like.user_id = req.user.id;
-        // Obtenemos fecha y hora y se la asginamos al like
-        const date = new Date();
-        const currentDate = date.toISOString();
-        like.like_date = currentDate;
-    
+
         try {
-            const newLike = await Like.addLike(like.user_id, like.post_id, like.like_date);
+            const newLike = await Like.addLike(like.user_id, like.post_id);
             // Devolvemos en formato json
             res.status(201).json(newLike);
         } catch (error) {

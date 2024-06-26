@@ -10,13 +10,11 @@ export class Like {
         this.like_date = like_date;
     };
 
-    static async addLike(user_id, post_id, like_date) {
+    static async addLike(user_id, post_id) {
         try {
-            // Prepara la fecha en el formato adecuado para la base de datos
-            const like_date = new Date().toISOString().slice(0, 19).replace('T', ' '); 
-            const query = `INSERT INTO ${this.table} (user_id, post_id, like_date) VALUES (?, ?, ?)`;
+            const query = `INSERT INTO ${this.table} (user_id, post_id, like_date) VALUES (?, ?, NOW())`;
             // Ejecutamos 
-            await db.query(query, [user_id, post_id, like_date]);
+            await db.query(query, [user_id, post_id]);
             // Query para seleccionar el post actualizado con la cantidad de 'likes' y comentarios
             const post = `
                 SELECT 
