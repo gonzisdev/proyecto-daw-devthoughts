@@ -46,15 +46,15 @@ export class postController{
         const isoDateString = currentDateSpain.toISOString(); 
         // Asignar la fecha y hora 
         post.post_date = isoDateString;
-                try {
-                    const newPost = await Post.createPost(post);
-                    // Devolvemos el post en json
-                    res.status(201).json(newPost);
-                } catch (error) {
-                    console.log(error);
-                    res.status(500).json({ error: "Error interno del servidor" }); 
-                };
+            try {
+                const newPost = await Post.createPost(post);
+                // Devolvemos el post en json
+                res.status(201).json(newPost);
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error: "Error interno del servidor" }); 
             };
+        };
     
     static removePost = async(req, res) => {
         // Obtenemos el id del post via body y el id del usuario que hizo la peticion
