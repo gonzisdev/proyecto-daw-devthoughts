@@ -9,77 +9,76 @@ import { convertToSpanishDateUser } from "../helpers/formatDate";
 export const FollowersList = () => {
 	
 	const params = useParams();
-	const { auth } = useAuth();
-	const { followers, getFollowers, profileFollowersFollowing, getProfileFollowersFollowing, profile, getProfile, follow, unfollow } = useApp();
+	const { auth, authProfile, getAuthProfile, getAuthProfileFollowersFollowing, authProfileFollowersFollowing } = useAuth();
+	const { followers, getFollowers, profile, getProfile, getProfileFollowersFollowing, profileFollowersFollowing, follow, unfollow } = useApp();
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchData = async () => {
+		const loadInitialData = async () => {
 			// Segun este estado mostraremos el spinner hasta que la informacion este lista, usamos una promesa para ello
 			// Ya mostramos spinner comprobando el auth, pero necesitamos alargar el tiempo de espera muestre mientras se recibe mas informacion
-			setIsLoading(true); 
+			setIsLoading(true); // Mostraremos el spinner mientras se realizan las diversas peticiones
 			await Promise.all([
-				getProfile(params.id),
-				getFollowers(params.id),
-				getProfileFollowersFollowing(params.id),
-			]);
-			setIsLoading(false); 
+                getAuthProfile(auth.id),
+                getProfile(params.id),
+                getFollowers(params.id, 1),
+                getProfileFollowersFollowing(params.id),
+                getAuthProfileFollowersFollowing(auth.id)
+            ]);
+			setIsLoading(false);
 		};
-		fetchData();
-	}, [params.id]); // Lo ejecutamos cada vez que cambien los params
+		loadInitialData();
+	}, [params.id]); // Cada vez que los params de la URI cambien
 
 	useEffect(() => {
-		getProfile(params.id);
-		getFollowers(params.id);
-		getProfileFollowersFollowing(params.id);
-	}, [followers]); // Actualizamos el state cada vez que haya cambios en los followers. Los cambios pueden ser vistos en tiempo real por cualquier usuario, ya que su estado tiene independencia
+		getAuthProfile(auth.id);
+		getAuthProfileFollowersFollowing(auth.id);
+	}, [authProfileFollowersFollowing]); // Cuando cambie los seguidores o seguidos del usuario autenticado actualizamos su perfil y sus seguidores y seguidos
 
 	const handleFollow = () => profileFollowersFollowing.following.includes(auth.id) ? unfollow(profile.id) : follow(profile.id);
 
+	const currentProfile = auth.id === parseInt(params.id) ? authProfile : profile; // Condicional para mostrar perfil y dividir en dos estados y evitar errores de render y estados
+	const followersFollowing = currentProfile.id === auth.id ? authProfileFollowersFollowing : profileFollowersFollowing; // Lo mismo pero con los seguidores y seguidos
+	
 	if (isLoading) return <Spinner />;
-
+	
 	return (
 		<>
 			<HomeNav />
 			<Link to={"/home/new-thought"} className="new-thought">
 				+ Nuevo Thought
 			</Link>
-
 			<div className="container-profile">
 				<div className="container-profle-data-container">
 					<div className="container-profile-data">
 						<div className="container-profile-title">
-							<h2>Perfil de {profile.nick}</h2>
-							{auth.id ===
-							parseInt(
-								params.id
-							) ? null : profileFollowersFollowing.followers &&
-							  profileFollowersFollowing.followers.length !== 0 &&
-							  profileFollowersFollowing.followers.includes(auth.id) ? (
-								<span className="profile-follower-tag">Te sigue</span>
-							) : (
-								<span className="profile-follower-tag">No te sigue</span>
-							)}
-							{auth.id ===
-							parseInt(
-								params.id
-							) ? null : profileFollowersFollowing.following &&
-							  profileFollowersFollowing.following.length !== 0 &&
-							  profileFollowersFollowing.following.includes(auth.id) ? (
-								<button
-									onClick={handleFollow}
-									className="profile-follower-button unfollow"
-								>
-									- No seguir
-								</button>
-							) : (
-								<button
-									onClick={handleFollow}
-									className="profile-follower-button"
-								>
-									+ Seguir
-								</button>
-							)}
+							<h2>Perfil de {currentProfile.nick}</h2>
+							{/* Mostrar "Te sigue" o "No te sigue" solo si currentProfile es igual a profile (otro usuario) */}
+							{currentProfile.id !== auth.id &&
+								(followersFollowing.followers &&
+								followersFollowing.followers.includes(auth.id) ? (
+									<span className="profile-follower-tag">Te sigue</span>
+								) : (
+									<span className="profile-follower-tag">No te sigue</span>
+								))}
+							{/* Mostrar botón de seguir o no seguir según corresponda, solo si estamos en el perfil de otro usuario */}
+							{currentProfile.id !== auth.id &&
+								(followersFollowing.following &&
+								followersFollowing.following.includes(auth.id) ? (
+									<button
+										onClick={handleFollow}
+										className="profile-follower-button unfollow"
+									>
+										- No seguir
+									</button>
+								) : (
+									<button
+										onClick={handleFollow}
+										className="profile-follower-button"
+									>
+										+ SEGUIR
+									</button>
+								))}
 						</div>
 						<div>
 							<div className="container-profile-followers">
@@ -87,25 +86,25 @@ export const FollowersList = () => {
 									<Link to={`/home/profile/following/${params.id}`}>
 										<span>Seguidos: </span>
 									</Link>
-									{profile.following_count}
+									{currentProfile.following_count}
 								</p>
 								<p>
 									<Link to={`/home/profile/followers/${params.id}`}>
 										<span>Seguidores: </span>
 									</Link>
-									{profile.followers_count}
+									{currentProfile.followers_count}
 								</p>
 							</div>
 							<p>
 								<span>Imagen:</span>
 							</p>
 							<div className="container-avatar container-avatar-profile">
-								{profile.image === null ? (
+								{currentProfile.image === null ? (
 									<img src="/avatar.jpg" alt="Default avatar" />
 								) : (
 									<img
 										src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${
-											profile.image
+											currentProfile.image
 										}`}
 										alt="User avatar"
 									/>
@@ -113,29 +112,30 @@ export const FollowersList = () => {
 							</div>
 							<p>
 								<span>Nombre: </span>
-								{profile.name}
+								{currentProfile.name}
 							</p>
 							<p>
 								<span>Apellidos: </span>
-								{profile.surname}
+								{currentProfile.surname}
 							</p>
 							<p>
 								<span>Email: </span>
-								{profile.email}
+								{currentProfile.email}
 							</p>
 							<p>
 								<span>Fecha de registro: </span>
-								{convertToSpanishDateUser(profile.register_date)}
+								{convertToSpanishDateUser(currentProfile.register_date)}
 							</p>
 							<p>
 								<span>Descripción: </span>
-								{profile.description === null || profile.description === ""
+								{currentProfile.description === null ||
+								currentProfile.description === ""
 									? "Sin descripción"
-									: profile.description}
+									: currentProfile.description}
 							</p>
 						</div>
 						<div className="container-profile-button">
-							{auth.id === profile.id ? (
+							{auth.id === currentProfile.id ? ( // Mostraremos un boton para editar el perfil si el usuario autenticado esta en su perfil
 								<button className="button button-profile">
 									<Link to={`/home/edit-profile/${auth.id}`}>
 										Editar perfil
@@ -147,7 +147,6 @@ export const FollowersList = () => {
 						</div>
 					</div>
 				</div>
-
 				<div className="follow-list">
 					{followers.length === 0 ? (
 						<div className="container-sad-face container-sad-face-profile">
