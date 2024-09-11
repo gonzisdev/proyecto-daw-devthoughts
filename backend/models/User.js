@@ -68,7 +68,7 @@ export class User {
 				user.register_date,
 			]);
 			// Verifica si el insert fue exitoso y devolvemos el usuario
-			if (result.affectedRows > 0) {
+			if (result[0].affectedRows > 0) {
 				const newUser = await this.getUserByEmail(user.email);
 				return newUser;
 			} else {
