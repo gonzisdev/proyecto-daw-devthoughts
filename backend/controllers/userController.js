@@ -57,7 +57,7 @@ export class userController{
                     nick: user.nick,
                     token: createJWT(user.id), // Creamos token al iniciar sesion
                     image: user.image,
-
+                    description: user.description
                 });
             } else {
                 const error = new Error('La contraseña es incorrecta');

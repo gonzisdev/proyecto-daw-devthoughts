@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
             };
             try {
                 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/profile`, config); // Realizamos la solicitud
-                const data = await response.json(); // Convertimos a JSON        
+                const data = await response.json(); // Convertimos a JSON     
                 setAuth(data); // Actualizamos el estado 
             } catch (error) {
                 console.log(error);

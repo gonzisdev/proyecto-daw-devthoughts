@@ -35,11 +35,11 @@ export const EditProfile = () => {
 		const value = formData[name];
 		let error = '';
 		if (name === 'nick' && !value) {
-		error = 'El nick de usuario es obligatorio';
+			error = 'El nick de usuario es obligatorio';
 		} else if (name === 'description' && !value) {
-		error = 'La descripción es obligatoria';
+			error = 'La descripción es obligatoria';
 		} else if (name === 'image' && value && !['image/png', 'image/jpeg', 'image/jpg', 'image/gif'].includes(value.type)) {
-		error = 'Solo se permiten archivos de imagen (png, jpeg, jpg, gif)';
+			error = 'Solo se permiten archivos de imagen (png, jpeg, jpg, gif)';
 		};
 		setErrors({ ...errors, [name]: error });
 		return error;
@@ -47,9 +47,9 @@ export const EditProfile = () => {
 
 	const validateForm = () => { // Validacion de todo el formulario antes de enviarlo
 		const formErrors = Object.keys(formData).reduce((acc, key) => {
-		const error = validateField(key); // Cada campo individualmente
-		if (error) acc[key] = error; // Si hay error lo añadimos al acumulador
-		return acc;
+			const error = validateField(key); // Cada campo individualmente
+			if (error) acc[key] = error; // Si hay error lo añadimos al acumulador
+			return acc;
 		}, {});
 		setErrors(formErrors);
 		return Object.keys(formErrors).length === 0; // Devuelve true si no hay errores o false si los hay
