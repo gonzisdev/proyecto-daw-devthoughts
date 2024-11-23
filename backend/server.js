@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import path, { dirname } from "path";
 import { fileURLToPath } from 'url';
 import cors from "cors";
@@ -9,9 +9,6 @@ import postRoutes from "./routes/postRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import followerRoutes from "./routes/followerRoutes.js";
 import likeRoutes from "./routes/likeRoutes.js";
-
-// Cargamos las variables de entorno desde .env 
-dotenv.config();
 
 // Importamos Express para crear y configurar el servidor
 const app = express();
