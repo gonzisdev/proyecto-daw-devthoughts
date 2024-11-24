@@ -1,8 +1,8 @@
-import express from "express";
+import { Router } from "express"
 import { likeController} from "../controllers/likeController.js";
 import { checkAuth } from "../middleware/checkAuth.js";
 
-const router = express.Router();
+const router = Router();
 
 // Establecemos las diferentes rutas, con el middleware de autenticacion y las funciones correspondientes
 router.post('/', checkAuth, likeController.addLike);

@@ -1,9 +1,9 @@
-import express from "express";
+import { Router } from "express"
 import { userController } from "../controllers/userController.js";
 import { checkAuth } from "../middleware/checkAuth.js";
 import { upload, deletePreviousImage, deleteImage } from "../middleware/multer.js";
 
-const router = express.Router();
+const router = Router();
 
 // Establecemos las diferentes rutas, con el middleware de autenticacion y las funciones correspondientes 
 // El registro, login y recuperacion de password no estan protegidas por middleware ya que no se requiere estar autenticado para hacer la peticion
