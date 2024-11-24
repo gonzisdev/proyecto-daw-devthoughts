@@ -19,7 +19,7 @@ import { Post } from "../pages/Post";
 export const App = () => {
   return (
     <BrowserRouter> {/* 2 rutas principales: Login y Home - Cada una con su layout y sus subrutas */}
-    	<AuthProvider> {/* Context de Autentificacion */}
+      <AuthProvider> {/* Context de Autentificacion */}
          <AppProvider> {/* Context de App */}
           <Routes>
             <Route path='/' element={<AuthLayout />}>

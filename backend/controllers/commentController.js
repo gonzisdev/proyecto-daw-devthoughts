@@ -7,18 +7,6 @@ export class commentController{
         const comment = new Comment(req.body);
         // Se asigna el ID del usuario de la solicitud al comentario
         comment.user_id = req.user.id;
-        // Asignamos fecha y hora actual al comentario
-        const currentDateUTC = new Date();
-        const currentMonth = currentDateUTC.getMonth() + 1; 
-        // Determinar el desfase horario 
-        let timezoneOffset = 60; // Horario de invierno (UTC+1)
-        if (currentMonth >= 4 && currentMonth <= 9) {
-            // Si el mes actual esta entre abril y septiembre, es horario de verano (UTC+2)
-            timezoneOffset = 120;
-        }
-        const currentDateSpain = new Date(currentDateUTC.getTime() + timezoneOffset * 60000); // Convertir minutos a milisegundos
-        const isoDateString = currentDateSpain.toISOString();
-        comment.comment_date = isoDateString;
         try {
             // Creamos el comentario utilizando el metodo del modelo
             const newComment = await Comment.createComment(comment);

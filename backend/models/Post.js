@@ -112,10 +112,10 @@ export class Post {
 			const query = `
                 INSERT INTO ${this.table}
                 (user_id, post, post_date)
-                VALUES (?, ?, ?)
+                VALUES (?, ?, NOW())
             `;
 			const result = await db.query(query, [
-				post.user_id,
+                post.user_id,
 				post.post,
 				post.post_date,
 			]);

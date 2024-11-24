@@ -191,9 +191,6 @@ export const AuthProvider = ({ children }) => {
             if (!config) return; 
             config.body = JSON.stringify({ id })
             await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/delete`, config);
-            // Limpiamos los estados y localStorage tras la eliminacion del usuario
-            logoutPosts() // Desde AppContext (estados de la app (posts, perfil, etc))
-            logout() // Desde AuthContext (token de localstorage y auth)
         } catch (error) {
             console.log(error); 
         };

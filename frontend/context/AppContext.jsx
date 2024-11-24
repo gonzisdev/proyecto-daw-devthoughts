@@ -180,28 +180,29 @@ export const AppProvider = ({ children }) => {
             console.log(error); 
         };
     };
-
-    const addComment = async (params, comment) =>{
+    
+    const addComment = async (params, comment) => {
         try {
             const config = checkTokenCreateConfig("POST");
             if (!config) return; 
-			const values = { post_id: parseInt(params.id), comment };
-		    config.body = JSON.stringify(values);
-			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/comments`, config);
-			if (!response.ok) throw new Error("Hubo un problema al enviar el comentario");
-			await getPost(params.id);
-			setAlert({
-				msg: "Respuesta publicada correctamente",
-				error: false,
-			});
-			setTimeout(() => setAlert({}), 3000);
-		} catch (error) {
-			setAlert({
-				msg: error.message || "Error al publicar el comentario",
-				error: true,
-			});
-		}
+            const values = { post_id: parseInt(params.id), comment };
+            config.body = JSON.stringify(values);
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/comments`, config);
+            if (!response.ok) throw new Error("Hubo un problema al enviar el comentario");
+            await getPost(params.id);
+            setAlert({
+                msg: "Respuesta publicada correctamente",
+                error: false,
+            });
+            setTimeout(() => setAlert({}), 3000);
+        } catch (error) {
+            setAlert({
+                msg: error.message || "Error al publicar el comentario",
+                error: true,
+            });
+        };
     };
+    
 
     const removeComment = async id => {
         try {

@@ -33,28 +33,15 @@ export class postController{
         const post = new Post(req.body);
         // Se asigna el ID del usuario que hizo la peticion como autor del post
         post.user_id = req.user.id;
-        // Obtener la fecha y hora actual en UTC
-        const currentDateUTC = new Date();
-        const currentMonth = currentDateUTC.getMonth() + 1;    
-        // Determinamos el desfase horario segun invierno o verano
-        let timezoneOffset = 60; // Por defecto, horario de invierno (UTC+1)
-        if (currentMonth >= 4 && currentMonth <= 9) {
-            // Si el mes actual está entre abril y septiembre, es horario de verano (UTC+2)
-            timezoneOffset = 120;
-        }
-        const currentDateSpain = new Date(currentDateUTC.getTime() + timezoneOffset * 60000); 
-        const isoDateString = currentDateSpain.toISOString(); 
-        // Asignar la fecha y hora 
-        post.post_date = isoDateString;
-            try {
-                const newPost = await Post.createPost(post);
-                // Devolvemos el post en json
-                res.status(201).json(newPost);
-            } catch (error) {
-                console.log(error);
-                res.status(500).json({ error: "Error interno del servidor" }); 
-            };
+        try {
+            const newPost = await Post.createPost(post);
+            // Devolvemos el post en json
+            res.status(201).json(newPost);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: "Error interno del servidor" }); 
         };
+    };
     
     static removePost = async(req, res) => {
         // Obtenemos el id del post via body y el id del usuario que hizo la peticion

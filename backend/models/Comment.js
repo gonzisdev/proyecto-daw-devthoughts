@@ -17,7 +17,7 @@ export class Comment {
             const query = `
                 INSERT INTO ${this.table}
                 (user_id, post_id, comment, comment_date)
-                VALUES (?, ?, ?, ?)`;
+                VALUES (?, ?, ?, NOW())`;
             // Ejecutamos
             const result = await db.query(query, [comment.user_id, comment.post_id, comment.comment, comment.comment_date]);
             // Retorna el resultado 

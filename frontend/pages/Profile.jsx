@@ -37,7 +37,7 @@ export const Profile = () => {
 		const observer = new IntersectionObserver(entries => entries[0].isIntersecting && !isLoading && setPage(prevPage => prevPage + 1), { threshold: 0.1 });
 		loader.current && observer.observe(loader.current);
 		return () => loader.current && observer.unobserve(loader.current);
-	  }, [loader.current]);
+	}, [loader.current]);
 
 	useEffect(() => { page > 1 && getProfilePosts(params.id, page); }, [params.id, page]); // Si cambian los params o se realiza una nueva peticion del scroll infinito, actualizamos los posts
 

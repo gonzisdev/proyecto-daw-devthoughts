@@ -86,7 +86,7 @@ export const EditProfile = () => {
 				<>
 					<HomeNav />
 					<div className="alert-container">
-						 {msg && <Alert alert={alert} />} {/* Mostramos la alerta si existe */}
+						{msg && <Alert alert={alert} />} {/* Mostramos la alerta si existe */}
 					</div>
 					<div className="container container-edit-profile">
 						<form encType="multipart/form-data" onSubmit={handleSubmit}>
