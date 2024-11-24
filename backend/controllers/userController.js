@@ -21,10 +21,6 @@ export class userController{
         try {
             const usuario = new User(req.body);
             usuario.unique_code = generateUniqueId(); // Generamos un id unico con nuestra funcion helper
-            // Añadimos la fecha y la formateamos y quitamos la parte del tiempo
-            const currentDate = new Date();
-            const formattedDate = currentDate.toISOString().split('T')[0];
-            usuario.register_date = formattedDate;
             // Hasheamos la contraseña con ayuda de bcrypt
             const salt = await bcrypt.genSalt(10);
             usuario.password = await bcrypt.hash(usuario.password, salt);
@@ -40,7 +36,6 @@ export class userController{
         const { email, password } = req.body;
         try {
             const existsUser = await User.existsEmail(email);
-    
             if (!existsUser) {
                 const error = new Error('Este usuario no está registrado');
                 return res.status(400).json({ msg: error.message });

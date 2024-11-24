@@ -56,7 +56,7 @@ export class User {
 			const query = `
                 INSERT INTO ${this.table}
                 (name, surname, password, email, nick, unique_code, register_date)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, CURDATE())
             `;
 			const result = await db.query(query, [
 				user.name,
@@ -64,8 +64,7 @@ export class User {
 				user.password,
 				user.email,
 				user.nick,
-				user.unique_code,
-				user.register_date,
+				user.unique_code
 			]);
 			// Verifica si el insert fue exitoso y devolvemos el usuario
 			if (result[0].affectedRows > 0) {
